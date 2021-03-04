@@ -4,7 +4,6 @@
 #include <string.h>
 #include <math.h>
 #include <string.h>
-
 #ifdef LINMATH_NO_INLINE
 #define LINMATH_H_FUNC static
 #else
@@ -70,6 +69,66 @@ LINMATH_H_FUNC void vec##n##_dup(vec##n r, vec##n const src) \
 LINMATH_H_DEFINE_VEC(2)
 LINMATH_H_DEFINE_VEC(3)
 LINMATH_H_DEFINE_VEC(4)
+
+#define LINMATH_H_DEFINE_IVEC(n) \
+typedef int ivec##n[n]; \
+LINMATH_H_FUNC void ivec##n##_add(ivec##n r, ivec##n const a, ivec##n const b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i] + b[i]; \
+} \
+LINMATH_H_FUNC void ivec##n##_sub(ivec##n r, ivec##n const a, ivec##n const b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i] - b[i]; \
+} \
+LINMATH_H_FUNC void ivec##n##_scale(ivec##n r, ivec##n const v, float const s) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = v[i] * s; \
+} \
+LINMATH_H_FUNC float ivec##n##_mul_inner(ivec##n const a, ivec##n const b) \
+{ \
+	float p = 0.f; \
+	int i; \
+	for(i=0; i<n; ++i) \
+		p += b[i]*a[i]; \
+	return p; \
+} \
+LINMATH_H_FUNC float ivec##n##_len(ivec##n const v) \
+{ \
+	return sqrtf(ivec##n##_mul_inner(v,v)); \
+} \
+LINMATH_H_FUNC void ivec##n##_norm(ivec##n r, ivec##n const v) \
+{ \
+	float k = 1.f / ivec##n##_len(v); \
+	ivec##n##_scale(r, v, k); \
+} \
+LINMATH_H_FUNC void ivec##n##_min(ivec##n r, ivec##n const a, ivec##n const b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i]<b[i] ? a[i] : b[i]; \
+} \
+LINMATH_H_FUNC void ivec##n##_max(ivec##n r, ivec##n const a, ivec##n const b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i]>b[i] ? a[i] : b[i]; \
+} \
+LINMATH_H_FUNC void ivec##n##_dup(ivec##n r, ivec##n const src) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = src[i]; \
+}
+
+LINMATH_H_DEFINE_IVEC(2)
+LINMATH_H_DEFINE_IVEC(3)
+LINMATH_H_DEFINE_IVEC(4)
 
 LINMATH_H_FUNC void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 {
